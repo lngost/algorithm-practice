@@ -1,0 +1,135 @@
+bubble sort
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an}; (unsorted)
+output: A = {a1', a2', a3', ..., an'}; (which a1' <= a2' <= a3' <= ... <= an')
+assume:
+    * Index of the first element is 1
+    * Index of the last element is A.length
+BUBBLE-SORT(A)
+    for i = 1 to A.length - 1
+        for j = A.length down to i+1
+            if A[j] < A[j-1]
+                swap A[j] with A[j-1]
+
+or
+
+BUBBLE-SORT(A)
+    sorted = false
+    unsorted_head = 1
+    while !sorted and unsorted_head < A.length
+        sorted = true
+        for i = A.length down to unsorted_head + 1
+            if A[i] < A[i-1]
+                swap A[i] with A[i-1]
+                sorted = false
+        ++unsorted_head
+
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an}; (unsorted)
+output: A = {a1', a2', a3', ..., an'}; (which a1' >= a2' >= a3' >= ... >= an')
+assume:
+    * Index of the first element is 1
+    * Index of the last element is A.length
+BUBBLE-SORT(A)
+    for i = 1 to A.length - 1
+        for j = A.length down to i+1
+            if A[j] > A[j-1]
+                swap A[j] with A[j-1]
+
+or
+
+BUBBLE-SORT(A)
+    sorted = false
+    unsorted_head = 1
+    while !sorted and unsorted_head < A.length
+        sorted = true
+        for i = A.length down to unsorted_head + 1
+            if A[i] > A[i-1]
+                swap A[i] with A[i-1]
+                sorted = false
+        ++unsorted_head
+
+
+***************************************************************************************
+time complexity
+
+The big O notation: O(n^2)
+
+note: There are 2 different situations on the best case of bubble sort, 
+      one is Θ(n^2), the other is Θ(n), based on your pattern.
+      For the worst case, analysis of two different patterns will be given 
+      even they have the same time complexity.
+
+(a-1) best case - the Θ(n^2) situation
+BUBBLE-SORT(A)                                  cost per exec       count
+    for i = 1 to A.length - 1                   c1                  n
+        for j = A.length down to i+1            c2                  n*(n+1)/2 - 1
+            if A[j] < A[j-1]                    c3                  n*(n-1)/2
+                swap A[j] with A[j-1]           c4                  0
+
+T(n) = c1 * n
+    + c2 * (n*(n+1)/2 - 1)
+    + c3 * (n*(n-1)/2)
+result: Θ(n^2)
+
+(a-2) best case - the Θ(n) situation
+BUBBLE-SORT(A)                                          cost per exec       count
+    sorted = false                                      c1                  1
+    unsorted_head = 1                                   c2                  1
+    while !sorted and unsorted_head < A.length          c3                  2
+        sorted = true                                   c4                  1
+        for i = A.length down to unsorted_head + 1      c5                  n
+            if A[i] < A[i-1]                            c6                  n-1
+                swap A[i] with A[i-1]                   c7                  0
+                sorted = false                          c8                  0
+        ++unsorted_head                                 c9                  1
+
+T(n) = c1
+    + c2
+    + c3 * 2
+    + c4
+    + c5 * n
+    + c6 * (n-1)
+    + c9
+result: Θ(n)
+
+
+
+(b-1) worst case - for the pattern in (a-1)
+BUBBLE-SORT(A)                                  cost per exec       count
+    for i = 1 to A.length - 1                   c1                  n
+        for j = A.length down to i+1            c2                  n*(n+1)/2 - 1
+            if A[j] < A[j-1]                    c3                  n*(n-1)/2
+                swap A[j] with A[j-1]           c4                  n*(n-1)/2
+
+T(n) = c1 * n
+    + c2 * (n*(n+1)/2 - 1)
+    + c3 * (n*(n-1)/2)
+    + c4 * (n*(n-1)/2)
+result: Θ(n^2)
+
+(b-2) worst case - for the pattern in (a-2)
+BUBBLE-SORT(A)                                          cost per exec       count
+    sorted = false                                      c1                  1
+    unsorted_head = 1                                   c2                  1
+    while !sorted and unsorted_head < A.length          c3                  n
+        sorted = true                                   c4                  n-1
+        for i = A.length down to unsorted_head + 1      c5                  n*(n+1)/2 - 1
+            if A[i] < A[i-1]                            c6                  n*(n-1)/2
+                swap A[i] with A[i-1]                   c7                  n*(n-1)/2
+                sorted = false                          c8                  n*(n-1)/2
+        ++unsorted_head                                 c9                  n-1
+
+T(n) = c1
+    + c2
+    + c3 * n
+    + c4 * (n-1)
+    + c5 * (n*(n+1)/2 - 1)
+    + c6 * (n*(n-1)/2)
+    + c7 * (n*(n-1)/2)
+    + c8 * (n*(n-1)/2)
+    + c9 * (n-1)
+result: Θ(n^2)
+

@@ -1,0 +1,83 @@
+selection-sort
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an}; (unsorted)
+output: A = {a1', a2', a3', ..., an'}; (which a1' <= a2' <= a3' <= ... <= an')
+assume:
+    * Index of the first element is 1
+    * Index of the last element is A.length
+SELECTION-SORT(A)
+    for i=1 to A.length-1
+        indexForMin = i
+        for j=i+1 to A.length
+            if A[j] < A[indexForMin]
+                indexForMin = j
+        temp = A[i]
+        A[i] = A[indexForMin]
+        A[indexForMin] = temp
+
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an}; (unsorted)
+output: A = {a1', a2', a3', ..., an'}; (which a1' >= a2' >= a3' >= ... >= an')
+assume:
+    * Index of the first element is 1
+    * Index of the last element is A.length
+SELECTION-SORT(A)
+    for i=1 to A.length-1
+        indexForMax = i
+        for j=i+1 to A.length
+            if A[j] > A[indexForMax]
+                indexForMax = j
+        temp = A[i]
+        A[i] = A[indexForMax]
+        A[indexForMax] = temp
+
+
+***************************************************************************************
+time complexity
+
+The big O notation: O(n^2)
+
+(a) best case
+SELECTION-SORT(A)                           cost per exec       count
+    for i=1 to A.length-1                   c1                  n
+        indexForMin = i                     c2                  n - 1
+        for j=i+1 to A.length               c3                  n*(n+1)/2 - 1
+            if A[j] < A[indexForMin]        c4                  n*(n-1)/2
+                indexForMin = j             c5                  0
+        temp = A[i]                         c6                  n - 1
+        A[i] = A[indexForMin]               c7                  n - 1
+        A[indexForMin] = temp               c8                  n - 1
+
+T(n) = c1*n 
+    + c2*(n-1) 
+    + c3*(n*(n+1)/2 - 1) 
+    + c4*(n*(n-1)/2) 
+    + c6*(n-1) 
+    + c7*(n-1) 
+    + c8*(n-1)
+result: Θ(n^2)
+
+
+(b) worst case
+SELECTION-SORT(A)                           cost per exec        count
+    for i=1 to A.length-1                   c1                    n
+        indexForMin = i                     c2                    n - 1
+        for j=i+1 to A.length               c3                    n*(n+1)/2 - 1
+            if A[j] < A[indexForMin]        c4                    n*(n-1)/2
+                indexForMin = j             c5                    n*(n-1)/2
+        temp = A[i]                         c6                    n - 1
+        A[i] = A[indexForMin]               c7                    n - 1
+        A[indexForMin] = temp               c8                    n - 1
+
+T(n) = c1*n 
+    + c2*(n-1) 
+    + c3*(n*(n+1)/2 - 1) 
+    + c4*(n*(n-1)/2) 
+    + c5*(n*(n-1)/2) 
+    + c6*(n-1) 
+    + c7*(n-1) 
+    + c8*(n-1)
+result: Θ(n^2)
+

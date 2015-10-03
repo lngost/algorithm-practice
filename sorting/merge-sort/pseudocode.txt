@@ -1,0 +1,209 @@
+merge sort
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an} (unsorted)
+output: A = {a1', a2', a3', ..., an'} (which a1' <= a2' <= a3' <= ... <= an')
+assume:
+    * Integers p, q, r and p <= q < r, 
+    * floor(x) means the maximum possible integer which is smaller or equal to x;
+    * Index of the first element is 1
+    * Index of the last element is A.length
+MERGE-SORT(A, p, r)
+    if p < r
+        q = floor((p+r)/2)
+        MERGE-SORT(A, p, q)
+        MERGE-SORT(A, q+1, r)
+        MERGE(A, p, q, r)
+
+MERGE(A, p, q, r)
+    n1 = q - p + 1
+    n2 = r - q
+    let L[1 ... n1] and R[1 ... n2] be new arrays
+    for i=1 to n1
+        L[i] = A[p+i-1]
+    for j=1 to n2
+        R[j] = A[q+j]
+    i = 1
+    j = 1
+    for k=p to r
+        if (j > n2) or (i <= n1 and L[i] <= R[j])
+            A[k] = L[i]
+            i = i + 1
+        else
+            A[k] = R[j]
+            j = j + 1
+
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an} (unsorted)
+output: A = {a1', a2', a3', ..., an'} (which a1' >= a2' >= a3' >= ... >= an')
+assume:
+    * Integers p, q, r and p <= q < r, 
+    * floor(x) means the maximum possible integer which is smaller or equal to x;
+    * Index of the first element is 1
+    * Index of the last element is A.length
+MERGE-SORT(A, p, r)
+    if p < r
+        q = floor((p+r)/2)
+        MERGE-SORT(A, p, q)
+        MERGE-SORT(A, q+1, r)
+        MERGE(A, p, q, r)
+
+MERGE(A, p, q, r)
+    n1 = q - p + 1
+    n2 = r - q
+    let L[1 ... n1] and R[1 ... n2] be new arrays
+    for i=1 to n1
+        L[i] = A[p+i-1]
+    for j=1 to n2
+        R[j] = A[q+j]
+    i = 1
+    j = 1
+    for k=p to r
+        if (j > n2) or (i <= n1 and L[i] >= R[j])
+            A[k] = L[i]
+            i = i + 1
+        else
+            A[k] = R[j]
+            j = j + 1
+
+
+***************************************************************************************
+time complexity
+
+The big O notation: O(n*log2(n))
+
+assume:
+    c    - a positive constant value;
+    n    - the size of a question, we assume n is a power of 2 here for easy analysis;
+    T(n) - the processing time for a question with size n;
+    x    - the ORIGINAL question could be divided into "x" number of sub-questions, here x = 2;
+    y    - the size of every sub-question is 1/y of it's parent's;
+    D(n) - the overall time for the division of the ORIGINAL question into two sub-questions;
+    C(n) - the overall time for the merging of two sub-questions to the ORIGINAL one;
+    note: D(n) and C(n) does not include sub-questions of the first two sub-questions;
+    
+description:
+    A constant value "c", if the size of a question "n" is small enough(i.e. n <= c),
+    then we let T(n) to be a constant time Θ(1).
+    For others(i.e. n > c), we could know that the size of every sub-question is n/y,
+    with T(n/y) processing time. All of the sub-questions will cost xT(n/y) processing time.
+    The function would be:
+    
+            T(n) = Θ(1),                     (when n <= c)
+        or
+            T(n) = xT(n/y) + D(n) + C(n),    (other situations)
+    
+    We've assumed n is a power of 2 for easy analysis, so it is clear that each division
+    step will generate two sub-questions with each half size of their parent one.
+    For T(n) = xT(n/y) + D(n) + C(n) as displayed above, we have the following steps:
+    
+        MERGE-SORT(A, p, r)
+        (1) division: D(n)
+                                                cost per exec   count
+                if p < r                        c1              1
+                    q = floor((p+r)/2)          c2              1
+
+        (2) recursively solving the first two sub-questions: xT(n/y)
+                                                cost per exec   count
+                MERGE-SORT(A, p, q)             T(n/2)          1
+                MERGE-SORT(A, q+1, r)           T(n/2)          1
+        
+        (3) merging: C(n)
+                                                cost per exec   count
+                MERGE(A, p, q, r)               Θ(n)            1
+            // tips: the reason C(n) = Θ(n) see the following
+
+        *************** time complexity C(n) for MERGE(A, p, q, r) ***************
+        MERGE(A, p, q, r)                                       cost per exec   count
+            n1 = q - p + 1                                      cc1             1
+            n2 = r - q                                          cc2             1
+            let L[1 ... n1] and R[1 ... n2] be new arrays       cc3             1
+            for i=1 to n1                                       cc4             n1+1
+                L[i] = A[p+i-1]                                 cc5             n1
+            for j=1 to n2                                       cc6             n2+1
+                R[j] = A[q+j]                                   cc7             n2
+            i = 1                                               cc8             1
+            j = 1                                               cc9             1
+            for k=p to r                                        cc10            n1+n2+1
+                if (j > n2) or (i <= n1 and L[i] <= R[j])       cc11            n1+n2
+                    A[k] = L[i]                                 cc12            n1
+                    i = i + 1                                   cc13            n1
+                else                                            cc14            n2
+                    A[k] = R[j]                                 cc15            n2
+                    j = j + 1                                   cc16            n2
+        
+        C(n) = cc1 * 1
+            + cc2 * 1
+            + cc3 * 1
+            + cc4 * (n1+1)
+            ...
+            + cc15 * n2
+            + cc16 * n2
+        The result would be: C(n) = c1'*n1 + c2'*n2 + c3'
+                            (c1',c2' and c3' are just normal constants)
+        Because we've assumed n is a power of 2 and x == 2, here we could know n1 = n2 = n/2
+        The result now become: C(n) = c1"*n + c2" = Θ(n)
+        **************************************************************************
+        
+    After the 3 steps above, the function now become:
+        
+            T(n) = Θ(1),                     (when n <= c)
+        or
+            T(n) = 2*T*(n/2) + Θ(n),         (other situations)
+        
+    We could also rewrite the function like that:
+    
+            T(n) = c,                     (when n <= c)
+        or
+            T(n) = 2*T*(n/2) + c'*n,      (other situations)
+    
+    For T(n) = 2*T*(n/2) + c'*n, we could easily draw a recursive tree to display the structure:
+    (note: using post-order traversal, also called LRN, left subtree -> right subtree -> node)
+    
+        
+        c'*n
+       /    \
+T*(n/2)      T*(n/2)
+    
+    
+    =>              c'*n
+                /          \
+          c'*n/2            c'*n/2
+        /       \          /      \
+ T*(n/4)      T*(n/4)   T*(n/4)    T*(n/4)
+    
+    ...
+    ...
+    ...
+    
+    =>                              c'*n
+                            /                   \
+                    c'*n/2                          c'*n/2
+                /           \                   /           \
+            c'*n/4          c'*n/4          c'*n/4          c'*n/4
+            /    \          /    \          /    \          /    \
+           :     :         :     :         :     :         :     :
+           :     :         :     :         :     :         :     :
+           
+           c  c  c  c  ...                              ...  c  c  c  -> total n number of c
+
+    The summary of each layer is c'*n with total log2(n) + 1 number of layers;
+    (note: the base of logA(B) is A)
+    
+    The result: T(n) = c'*n*log2(n) + c'*n;
+    
+    The final function now is:
+        
+            T(n) = c,                     (when n <= c)
+        or
+            T(n) = c'*n*log2(n) + c'*n,   (other situations)
+        
+    Also:
+        
+            T(n) = Θ(1),                     (when n <= c)
+        or
+            T(n) = Θ(n*log2(n)),             (other situations)
+            
+    The big O notation: O(n*log2(n))
+

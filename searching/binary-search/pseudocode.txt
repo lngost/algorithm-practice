@@ -1,0 +1,90 @@
+binary search
+
+***************************************************************************************
+input:
+    * A = {a1, a2, a3, ..., an}; (sorted, which a1 < a2 < a3 < ... < an)
+    * Target value: key
+output:
+    * An index "resultIndex" which A[resultIndex] is equal to key will be returned, 
+    otherwise return -1.
+note:
+    * Index of the first element is 1;
+    * Index of the last element is A.length;
+    * Integers p, q, r and p <= q <= r;
+    * floor(x) means the maximum possible integer which is smaller or equal to x.
+BINARY-SEARCH(A, p, r)
+    if p <= r
+        q = floor((p+r)/2)
+        if key == A[q]
+            return q
+        else if key < A[q]
+            return BINARY-SEARCH(A, p, q-1)
+        else if key > A[q]
+            return BINARY-SEARCH(A, q+1, r)
+    else
+        return -1
+
+
+***************************************************************************************
+time complexity
+
+The big O notation: O(log2(n))
+
+(a) best case
+note: The best case can be easily figured out because the key is equal to A[q] in the
+      first "if" comparison, the time complexity is Θ(1).
+
+(b) worst case
+note: As this is the worst case, we assume that the search will always go through the 
+      right subtree whatever the size "n" is an even or odd number. The reason is that 
+      both subtrees will be the same size if "n" is odd, and the right subtree will have 
+      one more element than the left if "n" is even according to the floor() method.
+BINARY-SEARCH(A, p, r)                              cost per exec       count
+    if p <= r                                       c1                  1
+        q = floor((p+r)/2)                          c2                  1
+        if key == A[q]                              c3                  1
+            return q                                c4                  0
+        else if key < A[q]                          c5                  1
+            return BINARY-SEARCH(A, p, q-1)         T(n/2)              0
+        else if key > A[q]                          c6                  1
+            return BINARY-SEARCH(A, q+1, r)         T(n/2)              1
+    else                                            c7                  0
+        return -1                                   c8                  0
+
+T(n) = c1 + c2 + c3 + c5 + c6 + T(n/2)
+The equation above can be rewrite as: T(n) = T(n/2) + c'
+The tree could be:
+
+        c'
+            \
+            T(n/2)
+
+=>
+
+                c'
+                    \
+                      c'
+                        \
+                        T(n/4)
+
+=>
+
+...
+
+=>
+
+                c'
+                  \
+                   c'
+                    \
+                     c'
+                     :
+                     :
+                     :
+                      c'
+
+Each layer has only one c', total log2(n) + 1 layers. 
+(note: The base of logA(B) is A)
+For now T(n) = c'*log2(n) + c'
+The result: Θ(log2(n))
+

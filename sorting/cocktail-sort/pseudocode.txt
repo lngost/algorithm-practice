@@ -1,0 +1,136 @@
+cocktail sort
+(also known as: bidirectional bubble sort)
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an}; (unsorted)
+output: A = {a1', a2', a3', ..., an'}; (which a1' <= a2' <= a3' <= ... <= an')
+assume:
+    * Index of the first element is 1
+    * Index of the last element is A.length
+COCKTAIL-SORT(A)
+    sorted = false
+    begin = 0
+    end = A.length - 1
+    while !sorted
+        sorted = true
+        ++begin
+        for i = begin to end            // the rightward pass
+            if A[i] > A[i+1]
+                swap A[i] with A[i+1]
+                sorted = false
+        if sorted                       // if no swap happened, exit while loop
+            break while loop
+        sorted = true
+        --end;
+        for i = end down to begin       // the leftward pass
+            if A[i] > A[i+1]
+                swap A[i] with A[i+1]
+                sorted = false
+
+
+***************************************************************************************
+input: A = {a1, a2, a3, ..., an}; (unsorted)
+output: A = {a1', a2', a3', ..., an'}; (which a1' >= a2' >= a3' >= ... >= an')
+assume:
+    * Index of the first element is 1
+    * Index of the last element is A.length
+COCKTAIL-SORT(A)
+    sorted = false
+    begin = 0
+    end = A.length - 1
+    while !sorted
+        sorted = true
+        ++begin
+        for i = begin to end            // the rightward pass
+            if A[i] < A[i+1]
+                swap A[i] with A[i+1]
+                sorted = false
+        if sorted                       // if no swap happened, exit while loop
+            break while loop
+        sorted = true
+        --end;
+        for i = end down to begin       // the leftward pass
+            if A[i] < A[i+1]
+                swap A[i] with A[i+1]
+                sorted = false
+
+
+***************************************************************************************
+time complexity
+
+The big O notation: O(n^2)
+
+(a) best case
+COCKTAIL-SORT(A)                                cost per exec       count
+    sorted = false                              c1                  1
+    begin = 0                                   c2                  1
+    end = A.length - 1                          c3                  1
+    while !sorted                               c4                  1
+        sorted = true                           c5                  1
+        ++begin                                 c6                  1
+        for i = begin to end                    c7                  n
+            if A[i] > A[i+1]                    c8                  n-1
+                swap A[i] with A[i+1]           c9                  0
+                sorted = false                  c10                 0
+        if sorted                               c11                 1
+            break while loop                    c12                 1
+        sorted = true                           c13                 0
+        --end;                                  c14                 0
+        for i = end down to begin               c15                 0
+            if A[i] > A[i+1]                    c16                 0
+                swap A[i] with A[i+1]           c17                 0
+                sorted = false                  c18                 0
+
+T(n) = c1 + c2 + c3 + c4 + c5 + c6
+    + c7 * n
+    + c8 * (n-1)
+    + c11 
+    + c12
+result: Θ(n)
+
+
+(b) worst case
+note:
+    For the worst case of cocktail sort, implementation of the algorithm would 
+    be slightly different depending on even or odd number of total elements: n.
+    As the difference would not affect the final result of time complexity, we 
+    could assume the "n" is an even number here for easy analysis.
+assume:
+    * n is an even number
+COCKTAIL-SORT(A)                                cost per exec       count
+    sorted = false                              c1                  1
+    begin = 0                                   c2                  1
+    end = A.length - 1                          c3                  1
+    while !sorted                               c4                  n/2 + 1
+        sorted = true                           c5                  n/2
+        ++begin                                 c6                  n/2
+        for i = begin to end                    c7                  n*(n+2)/4
+            if A[i] > A[i+1]                    c8                  (n^2)/4
+                swap A[i] with A[i+1]           c9                  (n^2)/4
+                sorted = false                  c10                 (n^2)/4
+        if sorted                               c11                 n/2
+            break while loop                    c12                 0
+        sorted = true                           c13                 n/2
+        --end;                                  c14                 n/2
+        for i = end down to begin               c15                 (n^2)/4
+            if A[i] > A[i+1]                    c16                 n*(n-2)/4
+                swap A[i] with A[i+1]           c17                 n*(n-2)/4
+                sorted = false                  c18                 n*(n-2)/4
+
+T(n) = c1 + c2 + c3
+    + c4 * (n/2 + 1)
+    + c5 * n/2
+    + c6 * n/2
+    + c7 * (n*(n+2)/4)
+    + c8 * ((n^2)/4)
+    + c9 * ((n^2)/4)
+    + c10 * ((n^2)/4)
+    + c11 * n/2
+    + c13 * n/2
+    + c14 * n/2
+    + c15 * ((n^2)/4)
+    + c16 * (n*(n-2)/4)
+    + c17 * (n*(n-2)/4)
+    + c18 * (n*(n-2)/4)
+result: Θ(n^2)
+
